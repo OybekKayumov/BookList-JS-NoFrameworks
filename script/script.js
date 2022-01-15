@@ -10,24 +10,26 @@ class Book {
 // todo UI Class: Handle UI Tasks
 class UI {
   static displayBooks() {
-    const storedBooks = [
-      {
-        title: 'Book One',
-        author: 'John Doe',
-        isbn: 12345
-      },
-      {
-        title: 'Book Two',
-        author: 'Oybek Kayumov',
-        isbn: 54321
-      },
-      {
-        title: 'Book Three',
-        author: 'Katta Toga',
-        isbn: 67890
-      }
-    ];
-    const books = storedBooks;
+    // const storedBooks = [
+    //   {
+    //     title: 'Book One',
+    //     author: 'John Doe',
+    //     isbn: 12345
+    //   },
+    //   {
+    //     title: 'Book Two',
+    //     author: 'Oybek Kayumov',
+    //     isbn: 54321
+    //   },
+    //   {
+    //     title: 'Book Three',
+    //     author: 'Katta Toga',
+    //     isbn: 67890
+    //   }
+    // ];
+    // const books = storedBooks;
+
+    const books = Store.getBooks();
 
     books.forEach((book) => UI.addBookToList(book));
   }
@@ -79,7 +81,42 @@ class UI {
 }
 
 // todo Store Class: Handles Storage
+class Store {
+  static getBooks() {
+    // string version of array
+    let books;
+    //! если ничего нет, то пустой array 
+    if (localStorage.getItem('books') === null) {
+      books = [];
+    } else {
+    //! если что то есть
+        books = JSON.parse(localStorage.getItem('books'));
+    }
+    return books;
 
+  }
+
+  static addBooks(book) {
+    const books = Store.getBooks();
+
+    books.push(book);
+
+    localStorage.setItem('books', JSON.stringify(books));
+    
+  }
+
+  static removeBooks(isbn) {
+    const bools = Store.getBooks();
+
+    books.forEach((book, index) => {
+      if(book.isbn === isbn) {
+        books.splice(index, 1);
+      }
+    });
+    
+    localStorage.setItem('books', JSON.stringify(books));
+  }
+}
 
 
 // todo Events: Display Books
@@ -111,10 +148,13 @@ document.addEventListener('DOMContentLoaded', UI.displayBooks);
 
       //* создание экземпляра книги
       const book = new Book(title, author, isbn);
-      console.log(book); //! ne rabotaet poka
+      // console.log(book); //? to see added book in consol
     
       //* add book to UI
       UI.addBookToList(book);
+
+      //* add book to Store
+      Store.addBooks(book);
 
       //* show success message 
       UI.showAlert('Book Added', 'success');
