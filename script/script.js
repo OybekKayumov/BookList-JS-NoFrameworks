@@ -169,11 +169,12 @@ document.addEventListener('DOMContentLoaded', UI.displayBooks);
 // todo Events: Remove a Book
 document.querySelector('#book-list').addEventListener('click', (e) => {
   // console.log(e.target);
+  //* remove book from UI
   UI.deleteBook(e.target);
-
+  
+  //* remove book from Store
+  Store.removeBooks(e.target.parentElement.previousElementSibling.textContent);
+  
   //* show delete message 
   UI.showAlert('Book Removed', 'success');
 })
-
-//! dopolnitelno
-// todo Events: Update List Book  
