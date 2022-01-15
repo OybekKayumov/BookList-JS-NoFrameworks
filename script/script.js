@@ -29,7 +29,7 @@ class UI {
     ];
     const books = storedBooks;
 
-    books.forEach((book) => UI.addBookToList(book))
+    books.forEach((book) => UI.addBookToList(book));
   }
 
   static addBookToList(book) {
@@ -43,14 +43,31 @@ class UI {
           <td><a href="#" class="btn btn-danger btn-sm delete">X</a></td>
     `; 
 
-    list.appendChild(row)
+    list.appendChild(row);
   }
 
   //* delete Book
-  static deleteBook(elem) {
-    if (elem.classList.contains('delete')) {
-      elem.parentElement.parentElement.remove();
+  static deleteBook(el) {
+    if(el.classList.contains('delete')) {
+      el.parentElement.parentElement.remove();
     }
+  }
+
+  //! <div class="alert alert-success">Message text</div>
+
+  static showAlert(message, className) {
+    const div = document.createElement('div');
+
+    div.className = `alert alert-${className}`;
+    div.appendChild(document.createTextNode(message));
+
+    const container = document.querySelector('.container');
+    const form = document.querySelector('#book-form');
+    container.insertBefore(div, form);
+
+    //! vanish in 4 sec
+    setTimeout(() => document.querySelector('.alert').remove(), 3000);
+    //! timeout 3sec 
   }
 
   //* очищение формы после ввода элемента
@@ -64,38 +81,59 @@ class UI {
 // todo Store Class: Handles Storage
 
 
+
 // todo Events: Display Books
-document.addEventListener('DOMContentLoaded', UI.displayBooks)
+document.addEventListener('DOMContentLoaded', UI.displayBooks);
 
 // todo Events: Add a Book
+
 // const addBook = document.querySelector('#book-form');
-// addBook.addEventListener('submit', (event) => {
+
+// if (addBook) {  
+  // addBook.addEventListener('submit', (event) => {
   
-document.querySelector('#book-form').addEventListener('submit', (event) => {
+  document.querySelector('#book-form').addEventListener('submit', (event) => {
 
-  //* prevent actual Submit
-  event.preventDefault();
-
-  //* get form values
-  const title = document.querySelector('#title').value;
-  const author = document.querySelector('#author').value;
-  const isbn = document.querySelector('#isbn').value;
-
-  //* создание экземпляра книги
-  const book = new Book(title, author, isbn);
-  console.log(book);
   
-  //* add book to UI
-  UI.addBookToList(book);
+    //* prevent actual Submit
+    event.preventDefault();
 
-})
+    //* get form values
+    const title = document.querySelector('#title').value;
+    const author = document.querySelector('#author').value;
+    const isbn = document.querySelector('#isbn').value;
+
+    //* validate book
+    if (title === '' || author === '' || isbn === '') {
+      //! alert('Please fill in all fields');
+      UI.showAlert('Please fill in all fields', 'danger');  //? try 'info', 'success'
+    } else {
+
+      //* создание экземпляра книги
+      const book = new Book(title, author, isbn);
+      console.log(book); //! ne rabotaet poka
+    
+      //* add book to UI
+      UI.addBookToList(book);
+
+      //* show success message 
+      UI.showAlert('Book Added', 'success');
+
+      //*clear fields
+      UI.clearFields();
+
+    }
+  })
+// }
 
 // todo Events: Remove a Book
 document.querySelector('#book-list').addEventListener('click', (e) => {
   // console.log(e.target);
-  UI.deleteBook(e.target)
+  UI.deleteBook(e.target);
+
+  //* show delete message 
+  UI.showAlert('Book Removed', 'success');
 })
 
 //! dopolnitelno
 // todo Events: Update List Book  
-
