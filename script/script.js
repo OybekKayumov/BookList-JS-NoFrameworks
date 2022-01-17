@@ -67,7 +67,7 @@ class UI {
     const form = document.querySelector('#book-form');
     container.insertBefore(div, form);
 
-    //! vanish in 4 sec
+    //! vanish in 3 sec
     setTimeout(() => document.querySelector('.alert').remove(), 3000);
     //! timeout 3sec 
   }
@@ -96,7 +96,7 @@ class Store {
 
   }
 
-  static addBooks(book) {
+  static addBook(book) {
     const books = Store.getBooks();
 
     books.push(book);
@@ -105,8 +105,8 @@ class Store {
     
   }
 
-  static removeBooks(isbn) {
-    const bools = Store.getBooks();
+  static removeBook(isbn) {
+    const books = Store.getBooks();
 
     books.forEach((book, index) => {
       if(book.isbn === isbn) {
@@ -129,11 +129,11 @@ document.addEventListener('DOMContentLoaded', UI.displayBooks);
 // if (addBook) {  
   // addBook.addEventListener('submit', (event) => {
   
-  document.querySelector('#book-form').addEventListener('submit', (event) => {
+  document.querySelector('#book-form').addEventListener('submit', (e) => {
 
   
     //* prevent actual Submit
-    event.preventDefault();
+    e.preventDefault();
 
     //* get form values
     const title = document.querySelector('#title').value;
@@ -141,9 +141,10 @@ document.addEventListener('DOMContentLoaded', UI.displayBooks);
     const isbn = document.querySelector('#isbn').value;
 
     //* validate book
-    if (title === '' || author === '' || isbn === '') {
+    if(title === '' || author === '' || isbn === '') {
       //! alert('Please fill in all fields');
-      UI.showAlert('Please fill in all fields', 'danger');  //? try 'info', 'success'
+      UI.showAlert('Please fill in all fields', 'danger'); 
+      //? try 'info', 'success'
     } else {
 
       //* создание экземпляра книги
@@ -154,7 +155,7 @@ document.addEventListener('DOMContentLoaded', UI.displayBooks);
       UI.addBookToList(book);
 
       //* add book to Store
-      Store.addBooks(book);
+      Store.addBook(book);
 
       //* show success message 
       UI.showAlert('Book Added', 'success');
@@ -168,13 +169,12 @@ document.addEventListener('DOMContentLoaded', UI.displayBooks);
 
 // todo Events: Remove a Book
 document.querySelector('#book-list').addEventListener('click', (e) => {
-  // console.log(e.target);
   //* remove book from UI
   UI.deleteBook(e.target);
   
   //* remove book from Store
-  Store.removeBooks(e.target.parentElement.previousElementSibling.textContent);
+  Store.removeBook(e.target.parentElement.previousElementSibling.textContent);
   
   //* show delete message 
   UI.showAlert('Book Removed', 'success');
-})
+});
